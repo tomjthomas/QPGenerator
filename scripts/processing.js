@@ -59,7 +59,7 @@ let form = document.getElementById('form');
 form.addEventListener("submit",event => {
   event.preventDefault();
   if(form.elements.subject.value)
-    addQuestion(event);
+    addQuestion(form);
   else
     alert("NO SUBJECT");
 })

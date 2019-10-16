@@ -1,9 +1,11 @@
-const {createServer} = require("http");
-const fs = require('fs');
-let server = createServer((request, response) => {
-  response.writeHead(200, {"Content-Type": "text/html"});
-  response.write(file);
-  response.end();
+const express = require('express');
+var app=express();
+const path=require('path');
+app.use(express.static(__dirname+'/scripts'));
+app.get('/',(req,res)=>{
+  res.sendFile(path.join(__dirname+'/html/qp.html'))
 });
-server.listen(8000);
-console.log("Listening! (port 8000)");
+
+app.listen(process.env.PORT||8000)
+const qp=require('./scripts/combine.js');
+qp.init();
