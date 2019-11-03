@@ -12,8 +12,6 @@ function init(callback){
   fs.readFile("bank.json","utf-8",(err,content)=>{
     if (err) throw err;
     readBank(content);
-    console.log(bank);
-    getPaper('Eng');
   });
 }
 /*
@@ -30,8 +28,10 @@ function readBank(text){
 }
 
 function writeBank(){
-  fs.writeBank('bank.json',bank,err =>{
-    throw err;
+  console.log('writing to bank');
+  fs.writeFile('bank.json',JSON.stringify(bank),err =>{
+    if(err)
+      throw err;
   });
 }
 
@@ -39,17 +39,21 @@ function writeBank(){
 
 //gets the questions for the paper
 function getPaper(subject){
-  questions=bank[subject].sections
-  for(let [marks,num] of Object.entries(pattern)){
-    paper=paper.concat(selector(questions[marks],num));
+  questions=bank[subject].sections;
+  for(i=1;i<=3;i++)
+  {
+    paper=[];
+    for(let [marks,num] of Object.entries(pattern)){
+      paper=paper.concat(selector(questions[marks],num));
+    }
+    savePaper(paper,i);
   }
-  savePaper(paper);
 }
 
 //saves the paper to a local file
-function savePaper(paper){
+function savePaper(paper,i){
   paper=parsePaper(paper);
-  fs.writeFile('../paper.txt',paper,(err) => {
+  fs.writeFile(`./papers/paper${i}.txt`,paper,(err) => {
     if (err) throw err;
     console.log('The file has been saved!');
   });
@@ -61,7 +65,7 @@ function parsePaper(paper){
   paper.forEach((item,index)=>{
       parsed=parsed.concat(`${index +1}.${item.content}\t\t${item.marks}\n`);
     });
-  return parsed
+  return parsed;
 }
 
 //selects questions to be put in the paper
@@ -99,14 +103,6 @@ class Question{
 }
 
 function addSubject(subjectName){
-  // let subjectName=prompt("Enter the subject name");
-  // add option for the subject to the select input
-  // let node=document.getElementById('subjectselect');
-  // let opt=document.createElement('option');
-  // opt.appendChild(document.createTextNode(subjectName));
-  // opt.value=subjectName;
-  // node.appendChild(opt);
-  // node.value=subjectName;
   let subject=new Subject(subjectName);
   bank[subjectName]=subject;
   writeBank();
@@ -114,12 +110,12 @@ function addSubject(subjectName){
 
 //Question creation function
 function addQuestion(form){
-  let subject=form.elements.subject.value;
-  let content=form.elements.question.value;
-  let marks=form.elements.marks.value;
+  let subject=form.subject;
+  let content=form.question;
+  let marks=form.marks;
   let question = new Question(content,marks);
   bank[subject].sections[marks].push(question);
   writeBank();
   console.log(JSON.stringify(bank));
 }
-module.exports={init,readBank,getPaper,parsePaper};
+module.exports={init,readBank,getPaper,parsePaper,addQuestion,addSubject};

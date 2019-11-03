@@ -2,34 +2,75 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="/qp.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   </head>
   <body>
-    <script src="/qp.js"></script>
-    <div id="main">
-      <button onclick="selectTab(event,'tabAdd')">ADD</button>
-      <button onclick="selectTab(event,'tabGenerate')">GENERATE</button>
-    </div>
-    <div id="tabAdd" class="tab">
-        Subject:
-        <select>
-          <option>Subject 1</option>
-          <option>Subject 2</option>
-        </select>
-        Question:
-        <textarea></textarea>
-        Marks: <input type="text">
-        <button>ADD</button>
-    </div>
-    <div id="tabGenerate" class="tab" style="display:none">
-        Subject:
-        <select>
-          <option>Subject 1</option>
-          <option>Subject 2</option>
-        </select>
-        Marks: <input type="text">
-        <button>GENERATE</button>
-    </div>
+    <div class="container-fluid">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#add">ADD</a>
+        </li>
+        <li>
+          <a class="nav-link" data-toggle="tab" href="#generate">GENERATE</a>
+        </li>
+      </ul>
 
+      <div class="tab-content" >
+        <div id="add" class="tab-pane fade in active">
+          <br>
+          <form id="addForm">
+            <div class="form-group">
+              <label for="iSubNameAdd" class="col">Subject:</label>
+              <select class="custom-select col" id="iSubNameAdd" name="subject">
+                <option selected disabled>Select..</option>
+                <option>Eng</option>
+              </select>
+              <button type="button" class="btn btn-secondary" id="btnAddSub">ADD SUBJECT</button>
+            </div>
+            <div class="form-group">
+              <label for="iQuestionContent">Question</label>
+              <textarea class="form-control" id="iQuestionContent" rows="5" name="question"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="iQuestionMarks">Marks</label>
+              <select class="custom-select" id="iQuestionMarks" name="marks">
+                <option selected>2</option>
+                <option>5</option>
+                <option>10</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">ADD</button>
+          </form>
+         </div>
+        <div class="tab-pane fade" id="generate" role="tab-panel">
+          <br>
+          <form id=genForm>
+            <div class="form-group">
+              <label for="iSubNameGen" class="col">Subject</label>
+              <select class="custom-select col" id="iSubNameGen" name="subject">
+                <option selected disabled>Select..</option>
+                <option>Eng</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnGenPaper">GENERATE</button>
+          </form>
+          <br>
+          <ul id="listgroup" class="list-group hidden">
+            <li class="list-group-item">
+              <a href="\papers\paper1.txt" title="Paper 1" target="_blank">Paper 1</a>
+            </li>
+            <li class="list-group-item">
+              <a href="\papers\paper2.txt" title="Paper 2" target="_blank">Paper 2</a>
+            </li>
+            <li class="list-group-item">
+              <a href="\papers\paper3.txt" title="Paper 3" target="_blank">Paper 3</a>
+            </li>
+          </ul>
+        </div>
+    </div>
   </body>
 </html>
