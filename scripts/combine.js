@@ -35,24 +35,32 @@ function writeBank(){
   });
 }
 
+function getSubjects(){
+    let subs=[];
+    for(let i of Object.keys(bank))
+      subs.push(bank[i]["name"]);
+    return subs;
+}
 //GENERATE
 
 //gets the questions for the paper
 function getPaper(subject){
-  questions=bank[subject].sections;
+  questions=bank[subject.substring(0,3)].sections;
   for(i=1;i<=3;i++)
   {
-    paper=[];
+    paper=`${subject}\n`;
+    console.log(paper);
+    selectedQuestions=[];
     for(let [marks,num] of Object.entries(pattern)){
-      paper=paper.concat(selector(questions[marks],num));
+      selectedQuestions=selectedQuestions.concat(selector(questions[marks],num));
     }
+    paper=paper.concat(parsePaper(selectedQuestions));
     savePaper(paper,i);
   }
 }
 
 //saves the paper to a local file
 function savePaper(paper,i){
-  paper=parsePaper(paper);
   fs.writeFile(`./papers/paper${i}.txt`,paper,(err) => {
     if (err) throw err;
     console.log('The file has been saved!');
@@ -104,18 +112,17 @@ class Question{
 
 function addSubject(subjectName){
   let subject=new Subject(subjectName);
-  bank[subjectName]=subject;
+  bank[subjectName.substring(0,3)]=subject;
   writeBank();
 }
 
 //Question creation function
 function addQuestion(form){
-  let subject=form.subject;
+  let subject=form.subject.substring(0,3);
   let content=form.question;
   let marks=form.marks;
   let question = new Question(content,marks);
   bank[subject].sections[marks].push(question);
   writeBank();
-  console.log(JSON.stringify(bank));
 }
-module.exports={init,readBank,getPaper,parsePaper,addQuestion,addSubject};
+module.exports={init,readBank,getPaper,parsePaper,addQuestion,addSubject,getSubjects};

@@ -16,6 +16,10 @@ app.get('/papers*',(req,res)=>{
   res.sendFile(path.join(__dirname+req.url))
 })
 
+app.get('/getSubjects',(req,res)=>{
+  res.send(JSON.stringify(qp.getSubjects()));
+})
+
 app.post('/submitQuestion',upload.none(),(req,res)=>{
   qp.addQuestion(req.body);
 });
@@ -25,7 +29,7 @@ app.post('/genPaper',upload.none(),(req,res)=>{
 
 app.use(bodyParser.json());
 app.post('/submitSubject',(req,res)=>{
-  qp.addSubject(req.body.subName);
+  qp.addSubject(req.body.subName[0]);
 });
 app.listen(process.env.PORT||8000)
 //

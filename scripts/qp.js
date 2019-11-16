@@ -4,6 +4,8 @@ window.onload=function(){
   let btnAddSub=document.getElementById('btnAddSub');
   let genForm=document.getElementById('genForm');
 
+  getSubjects();
+
   //ADD QUESTION
   addForm.addEventListener('submit',(evnt)=>{
     let request = new XMLHttpRequest();
@@ -15,16 +17,21 @@ window.onload=function(){
   //ADD SUBJECT
   btnAddSub.addEventListener('click',(evnt)=>{
     evnt.preventDefault();
-    let subjectName=prompt("Enter the subject name");
-    let request = new XMLHttpRequest();
-    request.open("POST","/submitSubject");
-    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    request.send(JSON.stringify({subName:subjectName}));
+    let subjectName=[];
+    let input=prompt("Enter the subject name")
+    if(input)
+    {
+      subjectName.push(input);
+      let request = new XMLHttpRequest();
+      request.open("POST","/submitSubject");
+      request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      request.send(JSON.stringify({subName:subjectName}));
 
-    //add option for the subject to the select inputs
-    let selectNodes=['iSubNameAdd','iSubNameGen'];
-    for(let i of selectNodes){
-      addOption(i,subjectName);
+      //add option for the subject to the select inputs
+      let selectNodes=['iSubNameAdd','iSubNameGen'];
+      for(let i of selectNodes){
+        addOption(i,subjectName);
+      }
     }
   });
 
@@ -38,12 +45,34 @@ window.onload=function(){
     node.setAttribute("class","list-group")
   });
 
-  function addOption(nodeName,subjectName){
+  //function to add options to "select" inputs. options are added when
+  //a new subject is added[addSubject] and from bank.json when page is loaded[getSubjects]
+  function addOption(nodeName,subjectNames){
     let node=document.getElementById(nodeName);
-    let opt=document.createElement('option');
-    opt.appendChild(document.createTextNode(subjectName));
-    opt.value=subjectName;
-    node.appendChild(opt);
-    node.value=subjectName;
+    for(let subjectName of subjectNames)
+    {
+      let opt=document.createElement('option');
+      opt.appendChild(document.createTextNode(subjectName));
+      opt.value=subjectName;
+      node.appendChild(opt);
+      node.value=subjectName;
+    }
+  }
+
+  function getSubjects(){
+    let request=new XMLHttpRequest();
+    request.responseType="json";
+    request.onreadystatechange=()=>{
+      if(request.readyState==4)
+        {
+          let subjectNames=request.response;
+          let selectNodes=['iSubNameAdd','iSubNameGen'];
+          for(let i of selectNodes)
+            addOption(i,subjectNames);
+        }
+    }
+    request.open("GET","/getSubjects");
+    request.send();
+
   }
 }
