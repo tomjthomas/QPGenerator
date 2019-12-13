@@ -43,9 +43,24 @@ function getSubjects(){
 }
 //GENERATE
 
+//checks if the bank has enough questions
+function checkQuestions(subject){
+  let flag=true;
+  for(let i of Object.keys(pattern)){
+    if(pattern[i]>bank[subject]["sections"][i].length)
+      flag=false
+    }
+  if(flag)
+    return true;
+  else {
+    return false;
+  }
+}
+
 //gets the questions for the paper
 function getPaper(subject){
-  questions=bank[subject.substring(0,3)].sections;
+  //console.log(bank);
+  questions=bank[subject].sections;
   for(i=1;i<=3;i++)
   {
     paper=`${subject}\n`;
@@ -112,17 +127,17 @@ class Question{
 
 function addSubject(subjectName){
   let subject=new Subject(subjectName);
-  bank[subjectName.substring(0,3)]=subject;
+  bank[subjectName]=subject;
   writeBank();
 }
 
 //Question creation function
 function addQuestion(form){
-  let subject=form.subject.substring(0,3);
+  let subject=form.subject;
   let content=form.question;
   let marks=form.marks;
   let question = new Question(content,marks);
   bank[subject].sections[marks].push(question);
   writeBank();
 }
-module.exports={init,readBank,getPaper,parsePaper,addQuestion,addSubject,getSubjects};
+module.exports={init,readBank,getPaper,parsePaper,addQuestion,checkQuestions,addSubject,getSubjects};
